@@ -170,6 +170,7 @@ public class Player : MonoBehaviour
                 gameManager.GameOver();
                 spawnManager.OnPlayerDeath();
             }
+            uiManager.CheckHighScore();
             // destroy this
             Destroy(this.gameObject);
         }
@@ -223,7 +224,6 @@ public class Player : MonoBehaviour
         score += points;
         uiManager.UpdateScore(score);
     }
-
     // Spawn object every given time interval
     IEnumerator deactivateTripleShot(){
         while(canTripleShot){

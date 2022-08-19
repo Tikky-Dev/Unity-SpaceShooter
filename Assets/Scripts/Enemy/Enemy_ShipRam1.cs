@@ -42,7 +42,7 @@ public class Enemy_ShipRam1 : Enemy
                 DemageEnemy(other);
                 if(enemylife <= 0){
                     // add points
-                    player.AddScore(points);
+                    uiManager.UpdateScore(points);
                     transform.GetChild(0).gameObject.SetActive(false);
                     lockRotation = true;
                     StartCoroutine(AnimationRoutine());
@@ -50,6 +50,7 @@ public class Enemy_ShipRam1 : Enemy
                 break;
             // if other is player
             case "Player":
+                player = other.GetComponent<Player>();
                 // damage player
                 player.DamagePlayer();
                 // destroy this

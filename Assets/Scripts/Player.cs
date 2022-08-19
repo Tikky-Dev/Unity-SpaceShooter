@@ -29,10 +29,10 @@ public class Player : MonoBehaviour
     private GameObject shieldVisual2;
     [SerializeField]
     private GameObject shieldVisual3;
+    [SerializeField]
+    private bool playerOne = true;
 
     private int shieldLives = 0;
-    [SerializeField]
-    private int score = 0;
     private UIManager  uiManager;
     private GameManager  gameManager;
 
@@ -54,10 +54,9 @@ public class Player : MonoBehaviour
     private AudioClip ShieldDownSoundClip;
     [SerializeField]
     private AudioClip PowerupPickupSoundClip;
+
     void Start()
     {
-        // Set startin position to (0, 0, 0)
-        transform.position = new Vector3(playerConfig.startXPosition, playerConfig.startYPosition, playerConfig.startZPosition);
         // find span manager
         spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
@@ -79,6 +78,11 @@ public class Player : MonoBehaviour
             audioSource.clip = laserSoundClip;
         }
 
+        if(!gameManager.getIsCoOpMode()){
+            // Set starting position to (0, 0, 0)
+            transform.position = new Vector3(playerConfig.startXPosition, playerConfig.startYPosition, playerConfig.startZPosition);
+        }
+        
         uiManager.UpdateLives(lives);
 
     }
@@ -218,11 +222,6 @@ public class Player : MonoBehaviour
                 audioSource.Play();
                 break;
         }
-    }
-
-    public void AddScore(int points){
-        score += points;
-        uiManager.UpdateScore(score);
     }
     // Spawn object every given time interval
     IEnumerator deactivateTripleShot(){

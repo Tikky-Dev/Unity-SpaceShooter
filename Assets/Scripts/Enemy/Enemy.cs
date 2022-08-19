@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     protected int enemylife;
     protected Player player;
+    protected UIManager uiManager;
     private Animator anim;
     private Collider2D colliderEnemy;
 
@@ -33,12 +34,12 @@ public class Enemy : MonoBehaviour
     }
 
     protected void DefaultInitialization(){
-        player = GameObject.Find("Player").GetComponent<Player>();
+        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         anim = GetComponent<Animator>();
         colliderEnemy = GetComponent<Collider2D>();
         audioSource = GetComponent<AudioSource>();
-        if(player == null){
-            Debug.LogError("Error: Player is null");
+        if(uiManager == null){
+            Debug.LogError("Error: Ui Manager is null");
         }
         if(anim == null){
             Debug.LogError("Error: Animator is null");

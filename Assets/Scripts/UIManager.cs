@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -19,8 +18,8 @@ public class UIManager : MonoBehaviour
     private Image lifeImage;
     [SerializeField]
     private Sprite[] lifeSprites;
-    private int score = 0;
     private int highScore = 0;
+    private int score = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +30,8 @@ public class UIManager : MonoBehaviour
         gameOverText.SetActive(false);
         RestartLevelText.SetActive(false);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void UpdateScore(int playerScore){
-        score = playerScore;
+    public void UpdateScore(int points){
+        score += points;
         scoreText.text = "Score: " + score;
     }
     public void CheckHighScore(){

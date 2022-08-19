@@ -6,7 +6,6 @@ public class Enemy_Asteroid1 : Enemy
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         switch (other.tag)
         {
             // if other is laser
@@ -14,12 +13,13 @@ public class Enemy_Asteroid1 : Enemy
                 DemageEnemy(other);
                 if(enemylife <= 0){
                     // add points
-                    player.AddScore(points);
+                    uiManager.UpdateScore(points);
                     StartCoroutine(AnimationRoutine());
                 }
                 break;
             // if other is player
             case "Player":
+                player = other.transform.GetComponent<Player>();
                 // damage player
                 player.DamagePlayer();
                 // destroy this

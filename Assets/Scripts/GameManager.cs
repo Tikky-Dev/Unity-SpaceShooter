@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;
     [SerializeField]
     private GameObject pauseMenu;
+    [SerializeField]
+    private bool isCoOpMode = false;
 
     void Start()
     {
@@ -18,7 +20,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.R) && isGameOver){
-            StartNewGame();
+            if(isCoOpMode){
+                StartNewCoOpGame();
+            }else{
+                StartNewGame();
+            }
         }
         
         if(Input.GetKeyDown(KeyCode.Escape)){
@@ -40,6 +46,9 @@ public class GameManager : MonoBehaviour
     public void StartNewGame(){
         SceneManager.LoadScene(1); // 1 is game scene
     }
+    public void StartNewCoOpGame(){
+        SceneManager.LoadScene(2); // 1 is co-op game scene
+    }
     public void GoToMainMenu(){
         Time.timeScale = 1;
         SceneManager.LoadScene(0); // 0 is menu scene
@@ -48,5 +57,9 @@ public class GameManager : MonoBehaviour
     public void ResumePlay(){
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
+    }
+
+    public bool getIsCoOpMode(){
+        return isCoOpMode;
     }
 }

@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     private float canFire = -1f;
     [SerializeField]
     private int lives = playerConfig.lives;
-    private SpawnManager spawnManager;
     // tripleShot active
     [SerializeField]
     private bool canTripleShot = false;
@@ -30,7 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject shieldVisual3;
     [SerializeField]
-    private bool playerOne = true;
+    private bool isPlayerOne = true;
 
     private int shieldLives = 0;
     private UIManager  uiManager;
@@ -58,14 +57,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         // find span manager
-        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         audioSource = GetComponent<AudioSource>();
-
-        if(spawnManager == null){
-            Debug.LogError("Error: Spawn manager is null");
-        }
         if(uiManager == null){
             Debug.LogError("Error: Ui manager is null");
         }
@@ -83,29 +77,41 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(playerConfig.startXPosition, playerConfig.startYPosition, playerConfig.startZPosition);
         }
         
-        uiManager.UpdateLives(lives);
+        uiManager.UpdateLives(lives, isPlayerOne);
 
     }
 
     void Update()
     {
        Movemantlogic();
-       
+       Shootlogic();
+    }
+
+    void Shootlogic(){
         // Using space key to fire laser object
-        if(Input.GetKeyDown(KeyCode.Space) && Time.time > canFire){
+        if(Input.GetKeyDown(KeyCode.Space) && Time.time > canFire && isPlayerOne){
+            FireLaser();
+        }else if(Input.GetKeyDown(KeyCode.KeypadEnter) && Time.time > canFire && !isPlayerOne){
             FireLaser();
         }
     }
 
     void Movemantlogic(){
-        // Inputs: Horizontal and Vertical
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        Vector3 direction;
+        if(isPlayerOne){
+            // Inputs: Horizontal and Vertical
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            direction = new Vector3(horizontalInput, verticalInput, 0);
+            transform.Translate(direction * speed * Time.deltaTime);
+        }else{
+            // Inputs: Horizontal and Vertical
+            float horizontalInput = Input.GetAxis("HorizontalNumber");
+            float verticalInput = Input.GetAxis("VerticalNumber");
+            direction = new Vector3(horizontalInput, verticalInput, 0);
+            transform.Translate(direction * speed * Time.deltaTime);
+        }
 
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-
-        // Move player to the given direction with preset speed
-        transform.Translate(direction * speed * Time.deltaTime);
 
         // Limit player movement on Y axises
             // upper and lower limit
@@ -164,18 +170,10 @@ public class Player : MonoBehaviour
             return;
         }
         lives--;
-        uiManager.UpdateLives(lives);
+        uiManager.UpdateLives(lives, isPlayerOne);
 
         // check if dead
         if(lives <= 0){
-
-            // Stop spawning
-            if(spawnManager != null){
-                gameManager.GameOver();
-                spawnManager.OnPlayerDeath();
-            }
-            uiManager.CheckHighScore();
-            // destroy this
             Destroy(this.gameObject);
         }
     }
